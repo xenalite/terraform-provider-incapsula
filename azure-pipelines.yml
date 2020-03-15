@@ -7,16 +7,22 @@ pool:
 variables:
   system.debug: true
   GOFLAGS: -mod=vendor
+  WorkingDir: /go/src/github.com/terraform-providers/terraform-provider-incapsula
 
 jobs:
 - job: build
-  container: docker.io/golang:1.13
+  container: 
+    image: docker.io/golang:1.13
   steps:
     - checkout: self
       clean: true
-    - script: $(Build.SourcesDirectory)/scripts/gogetcookie.sh
-    - script: make build
-    - script: make test
-    - script: make vet
-    # - publish: $(Build.SourcesDirectory)/bin
-    #   artifact: drop
+    - script: cp -r $(Build.SourcesDirectory) $(WorkingDir)
+    # - script: $(WorkingDir)/scripts/gogetcookie.sh
+    - bash: make build
+      workingDirectory: $(WorkingDir)
+    - bash: make test
+      workingDirectory: $(WorkingDir)
+    - bash: make vet
+      workingDirectory: $(WorkingDir)
+    - publish: /go/bin/terraform-provider-incapsula
+      artifact: drop
