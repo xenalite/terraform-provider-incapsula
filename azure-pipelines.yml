@@ -6,7 +6,7 @@ pool:
 
 variables:
   system.debug: true
-  TargetDir: $GOPATH/src/github.com/terraform-providers/terraform-provider-incapsula
+  GOFLAGS: -mod=vendor
 
 jobs:
 - job: build
@@ -14,12 +14,9 @@ jobs:
   steps:
     - checkout: self
       clean: true
-    - script: |
-        echo $GOPATH
-        cp -r $(Build.SourcesDirectory) $(TargetDir)
-        cd $(TargetDir)
-        make bin
-        ls -R $GOPATH/bin
-        make test
-    - publish: $(TargetDir)/bin
-      artifact: drop
+    - script: $(Build.SourcesDirectory)/scripts/gogetcookie.sh
+    - script: make build
+    - script: make test
+    - script: make vet
+    # - publish: $(Build.SourcesDirectory)/bin
+    #   artifact: drop
