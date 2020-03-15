@@ -16,8 +16,8 @@ jobs:
   steps:
     - checkout: self
       clean: true
-    - script: cp -r $(Build.SourcesDirectory) $(WorkingDir)
-    # - script: $(WorkingDir)/scripts/gogetcookie.sh
+    - bash: cp -r $(Build.SourcesDirectory) $(WorkingDir)
+    # - bash: $(WorkingDir)/scripts/gogetcookie.sh
     - bash: make build
       workingDirectory: $(WorkingDir)
     - bash: make test
