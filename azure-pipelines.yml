@@ -1,5 +1,6 @@
 trigger:
   - master
+  - feature/*
 
 pool:
   vmImage: ubuntu-latest
@@ -16,6 +17,7 @@ jobs:
   steps:
     - checkout: self
       clean: true
+    - bash: mkdir $(WorkingDir)
     - bash: cp -r $(Build.SourcesDirectory) $(WorkingDir)
     # - bash: $(WorkingDir)/scripts/gogetcookie.sh
     - bash: make build
