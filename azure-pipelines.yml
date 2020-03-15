@@ -26,7 +26,7 @@ jobs:
       workingDirectory: $(WorkingDir)
     - bash: make vet
       workingDirectory: $(WorkingDir)
-    - bash: ls $(WorkingDir)
-    - bash: ls /go/bin
-    - publish: /go/bin
-      artifact: drop
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: /go/bin/terraform-provider-incapsula
+        artifactName: drop
