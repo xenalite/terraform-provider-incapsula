@@ -8,7 +8,8 @@ pool:
 variables:
   system.debug: true
   GOFLAGS: -mod=vendor
-  WorkingDir: /go/src/github.com/terraform-providers/terraform-provider-incapsula
+  BinName: terraform-provider-incapsula
+  WorkingDir: /go/src/github.com/terraform-providers/$(BinName)
 
 jobs:
 - job: build
@@ -19,14 +20,13 @@ jobs:
       clean: true
     - bash: mkdir -p $(WorkingDir)
     - bash: cp -r $(Build.SourcesDirectory)/** $(WorkingDir)
-    # - bash: $(WorkingDir)/scripts/gogetcookie.sh
+    - bash: $(WorkingDir)/scripts/gogetcookie.sh
     - bash: make build
       workingDirectory: $(WorkingDir)
     - bash: make test
       workingDirectory: $(WorkingDir)
     - bash: make vet
-      workingDirectory: $(WorkingDir)
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: /go/bin/terraform-provider-incapsula
-        artifactName: drop
+      workingDirectory: $(WorkingDir)      
+    - bash: cp /go/bin/$(BinName) $(Build.SourcesDirectory)/$(BinName)
+    - publish: $(Build.SourcesDirectory)/$(BinName)
+      artifact: drop
