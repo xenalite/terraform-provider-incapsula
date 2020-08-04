@@ -157,6 +157,53 @@ func resourceDataCenterUpdate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
+	listDataCentersResponse, err := client.ListDataCenters(d.Get("site_id").(string))	
+
+	// List data centers response object may indicate that the Site ID has been deleted (9413)
+	if listDataCentersResponse != nil {
+		// Res can oscillate between strings and ints
+		var resString string
+		if resNumber, ok := listDataCentersResponse.Res.(float64); ok {
+			resString = fmt.Sprintf("%d", int(resNumber))
+		} else {
+			resString = listDataCentersResponse.Res.(string)
+		}
+		if resString == "9413" {
+			log.Printf("[INFO] Incapsula Site ID %s has already been deleted: %s\n", d.Get("site_id"), err)
+			return nil
+		}
+	}
+
+	if err != nil {
+		return err
+	}
+
+	found := false
+
+	for _, dataCenter := range listDataCentersResponse.DCs {
+		if dataCenter.ID == d.Id() {
+			data_center_server := dataCenter.Servers[0]
+
+			_, err := client.EditDataCenterServer(
+				data_center_server.ID,
+				d.Get("server_address").(string),
+				data_center_server.IsStandBy,
+				data_center_server.Enabled,
+			)
+
+			if err != nil {
+				return err
+			}
+
+			found = true
+		}
+	}
+
+	if !found {
+		log.Printf("[INFO] Incapsula Data Center ID %s for Site ID %s has already been deleted: %s\n", d.Id(), d.Get("site_id"), err)
+		return nil
+	}
+
 	return nil
 }
 
