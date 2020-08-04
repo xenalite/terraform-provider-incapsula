@@ -157,7 +157,7 @@ func resourceDataCenterUpdate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	listDataCentersResponse, err := client.ListDataCenters(d.Get("site_id").(string))	
+	listDataCentersResponse, err := client.ListDataCenters(d.Get("site_id").(string))
 
 	// List data centers response object may indicate that the Site ID has been deleted (9413)
 	if listDataCentersResponse != nil {
