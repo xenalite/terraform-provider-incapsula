@@ -405,10 +405,10 @@ func resourceSiteRead(d *schema.ResourceData, m interface{}) error {
 	}
 	d.Set("dns_a_record_value", dnsARecordValues)
 
-	// Set the GlobalSign verification (may not exist)
-	if siteStatusResponse.Ssl.GeneratedCertificate.ValidationMethod == "dns" {
-		d.Set("domain_verification", siteStatusResponse.Ssl.GeneratedCertificate.ValidationData[0].SetDataTo[0])
-	}
+	// // Set the GlobalSign verification (may not exist)
+	// if siteStatusResponse.Ssl.GeneratedCertificate.ValidationMethod == "dns" {
+	// 	d.Set("domain_verification", siteStatusResponse.Ssl.GeneratedCertificate.ValidationData[0].SetDataTo[0])
+	// }
 
 	// Get the log level for the site
 	if siteStatusResponse.LogLevel != "" {

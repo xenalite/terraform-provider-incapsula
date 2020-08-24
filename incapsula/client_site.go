@@ -138,11 +138,11 @@ type SiteStatusResponse struct {
 		GeneratedCertificate struct {
 			Ca               string `json:"ca"`
 			ValidationMethod string `json:"validation_method"`
-			ValidationData   []struct {
-				DNSRecordName string   `json:"dns_record_name"`
-				SetTypeTo     string   `json:"set_type_to"`
-				SetDataTo     []string `json:"set_data_to"`
-			} `json:"validation_data"`
+			// ValidationData   []struct {
+			// 	DNSRecordName string   `json:"dns_record_name"`
+			// 	SetTypeTo     string   `json:"set_type_to"`
+			// 	SetDataTo     []string `json:"set_data_to"`
+			// } `json:"validation_data"`
 			San              []string `json:"san"`
 			ValidationStatus string   `json:"validation_status"`
 		} `json:"generated_certificate"`
